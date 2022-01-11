@@ -51,7 +51,7 @@ public class PlayerMove : MonoBehaviour
         if (collision.gameObject.CompareTag("Ground"))
         {
             isJumping = false;
-            //Debug.Log("¹Ù´Ú¿¡ ´êÀ½");
+            //Debug.Log("¹Ù´Ú¿¡ ´êÀ½"); 
         }
     }
 
