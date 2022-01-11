@@ -10,6 +10,7 @@ public class PlayerMove : MonoBehaviour
 
     public float moveSpeed = 5f;
     public float jumpPower = 5f;
+    private bool isJumping;
 
     private void Start()
     {
@@ -30,9 +31,27 @@ public class PlayerMove : MonoBehaviour
     }
     private void Jump()
     {
-        if(Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.Space))
         {
-            playerRigidbody.AddForce(Vector3.up * jumpPower, ForceMode.Impulse);
+            if (!isJumping)
+            {
+                isJumping = true;
+                playerRigidbody.AddForce(Vector3.up * jumpPower, ForceMode.Impulse);
+                //Debug.Log("점프");
+            }
+        }
+        else
+        {
+            return;
+            //Debug.Log("점프 못함");
+        }
+    }
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Ground"))
+        {
+            isJumping = false;
+            //Debug.Log("바닥에 닿음");
         }
     }
 
