@@ -12,6 +12,8 @@ public class PlayerMove : MonoBehaviour
     public float jumpPower = 5f;
     private bool isJumping;
 
+    private float xMouseSensitivity = 5f;
+
     private void Start()
     {
         playerInput = GetComponent<PlayerInput>();
@@ -23,6 +25,11 @@ public class PlayerMove : MonoBehaviour
     {
         Move();
         Jump();
+    }
+
+    private void Update()
+    {
+        XMouseRotate();
     }
 
     private void Move()
@@ -53,6 +60,13 @@ public class PlayerMove : MonoBehaviour
             isJumping = false;
             //Debug.Log("바닥에 닿음"); 
         }
+    }
+    private void XMouseRotate()
+    {
+        float xMouseRotate = Input.GetAxis("Mouse X") * xMouseSensitivity;
+
+        transform.Rotate(0f, xMouseRotate, 0f);
+        Debug.Log("Y축 기준 X축 이동 감지");
     }
 
 }
