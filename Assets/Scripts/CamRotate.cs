@@ -33,7 +33,7 @@ public class CamRotate : MonoBehaviour
         if (tempCam != null)
         {
             tempCam.transform.localRotation = Quaternion.Euler(-mouseY, 0f, 0f);
-            Debug.Log("X축 기준 Y축 이동 감지");
+            //Debug.Log("X축 기준 Y축 이동 감지");
         }
     }
 }

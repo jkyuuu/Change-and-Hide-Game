@@ -66,7 +66,7 @@ public class PlayerMove : MonoBehaviour
         float xMouseRotate = Input.GetAxis("Mouse X") * xMouseSensitivity;
 
         transform.Rotate(0f, xMouseRotate, 0f);
-        Debug.Log("Y축 기준 X축 이동 감지");
+        //Debug.Log("Y축 기준 X축 이동 감지");
     }
 
 }
