@@ -8,11 +8,11 @@ public class ObjectAwareness : MonoBehaviour
     private float rayDistance = 50f;
 
     public LayerMask objectTarget;
+    public bool rayHit { get; private set; }
 
-
-    public void Update()
+    protected void OnEnable()
     {
-        Awareness();
+        rayHit = false;
     }
 
     public void Awareness()
@@ -23,23 +23,23 @@ public class ObjectAwareness : MonoBehaviour
         int objectTarget = 1 << LayerMask.NameToLayer("ObjectTarget");
         //objectTarget = ~objectTarget;
 
-        if(Physics.Raycast(rayTransform.transform.position, rayTransform.transform.forward, out hit, rayDistance, objectTarget))
-        {
-            //ObjectTarget target = hit.collider.GetComponent<ObjectTarget>();
-
-            //GameObject target = hit.transform.GetComponent<GameObject>();
-            //if(target != null)
-            //{
-            //    target.gameObject
-            //}
+        if (Physics.Raycast(rayTransform.transform.position, rayTransform.transform.forward, out hit, rayDistance, objectTarget))
+        {   
+            rayHit = true;
 
             Debug.DrawRay(rayTransform.transform.position, rayTransform.transform.forward * rayDistance, Color.blue, 0.3f);
             Debug.Log("ObjectTarget ¥Í¿Ω");
-        }
+                        
+        }            
         else
         {
+            rayHit = false;
+
             Debug.Log("¥Í¡ˆ æ ¿Ω");
+            
+            return;
         }
-       
+        
+        
     }
 }
