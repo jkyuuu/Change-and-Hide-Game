@@ -9,6 +9,8 @@ public class PlayerTransformation : MonoBehaviour
     private PlayerInput playerInput;
     private GameObject playerObject;
 
+    public GameObject hitObject;
+    private Transform transformPoint;
     
     public enum State
     {
@@ -20,7 +22,8 @@ public class PlayerTransformation : MonoBehaviour
 
     private void OnEnable()
     {
-        state = State.Ready;       
+        state = State.Ready;
+        
     }
     
     private void Start()
@@ -49,16 +52,26 @@ public class PlayerTransformation : MonoBehaviour
             {
                 playerObject = this.gameObject;
 
-                GameObject hitObject = FindObjectOfType<HitObject>().gameObject;
+                CreateObject();
+                //GameObject hitObject = FindObjectOfType<HitObject>().gameObject;
+                Debug.Log("오브젝트 가져옴");
 
-                playerObject = hitObject;
+
+                playerObject.SetActive(false);
 
                 state = State.Transformation;
 
                 Debug.Log("변신 완료!");
+
             }
             
         }        
+    }
+
+    public void CreateObject()
+    {
+        transformPoint = playerObject.transform;
+        hitObject = Instantiate(objectAwareness.hitGameobject, transformPoint.position, transformPoint.rotation);
     }
 
     public void returnPlayer()
