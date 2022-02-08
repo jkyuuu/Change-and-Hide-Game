@@ -11,14 +11,17 @@ public class CamRotate : MonoBehaviour
     [SerializeField]
     private float yMouseSensitivity = 50f;
 
-    Camera tempCam;
+    Camera mainCam;
     float mouseY;
 
     private void Start()
     {
-        tempCam = FindObjectOfType<Camera>();
-        if (tempCam == null)
-            Debug.Log("카메라없음");
+        mainCam = FindObjectOfType<Camera>();
+        if (mainCam == null)
+        {
+            Debug.Log("메인 카메라없음");
+        }
+
     }
 
     private void Update()
@@ -30,10 +33,12 @@ public class CamRotate : MonoBehaviour
         
         mouseY = Mathf.Clamp(mouseY, -90, 90);
 
-        if (tempCam != null)
+        if (mainCam != null)
         {
-            tempCam.transform.localRotation = Quaternion.Euler(-mouseY, 0f, 0f);
+            mainCam.transform.localRotation = Quaternion.Euler(-mouseY, 0f, 0f);
             //Debug.Log("X축 기준 Y축 이동 감지");
         }
+
+        
     }
 }
