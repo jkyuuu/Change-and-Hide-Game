@@ -9,7 +9,6 @@ public class ObjectAwareness : MonoBehaviour
     private float rayDistance = 50f;
 
     public GameObject hitGameobject;
-
     //public LayerMask objectTarget;
     public bool rayHit { get; private set; }
 
@@ -48,12 +47,6 @@ public class ObjectAwareness : MonoBehaviour
             
             return;
         }
-        
-        
+           
     }
-
-    //public void InstantPrefab()
-    //{
-    //    playerTransformation.hitPrefab = Instantiate()
-    //}
 }

@@ -30,7 +30,7 @@ public class CamRotate : MonoBehaviour
         
         mouseY += yMouseRotate * Time.deltaTime;
         // P(Position) = P0(Position 0) + vt(velocity와 time) --> 변경위치 = 현재위치 + (속도*시간)
-        
+
         mouseY = Mathf.Clamp(mouseY, -90, 90);
 
         if (mainCam != null)
