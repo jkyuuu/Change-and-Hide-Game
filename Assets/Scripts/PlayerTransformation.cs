@@ -15,8 +15,8 @@ public class PlayerTransformation : MonoBehaviour
     private Rigidbody objectRigid;
     private CamController camController;
 
-    private Camera subCamera;
-        
+    private Transform subCamParent;
+    private Transform subCamera;
     public enum State
     {
         Ready,
@@ -24,7 +24,13 @@ public class PlayerTransformation : MonoBehaviour
     }
 
     public State state { get; private set; } // 현재 플레이어 상태
-
+    private void Awake()
+    {
+        subCamParent = GameObject.Find("Sub Cam Parent").transform;
+        subCamera = subCamParent.GetChild(0);
+        if (subCamera == null)
+            Debug.Log("서브 카메라 없음");
+    }
     private void OnEnable()
     {
         state = State.Ready;
@@ -35,7 +41,7 @@ public class PlayerTransformation : MonoBehaviour
     {        
         playerInput = GetComponent<PlayerInput>();
         camController = GetComponent<CamController>();
-        subCamera = camController.subCam;
+        
     }
 
     private void Update()
@@ -66,8 +72,7 @@ public class PlayerTransformation : MonoBehaviour
                 state = State.Transformation;
                 Debug.Log("변신 완료!");
             }
-            
-        }        
+        }
     }
 
     public void CreateObject()
@@ -76,9 +81,7 @@ public class PlayerTransformation : MonoBehaviour
         hitObject = Instantiate(objectAwareness.hitGameobject, transformPoint.position, transformPoint.rotation);
         
         objectRigid = hitObject.GetComponent<Rigidbody>();
-        //objectRigid.constraints = RigidbodyConstraints.None;
-        objectRigid.constraints = RigidbodyConstraints.FreezeRotationX;
-        //objectRigid.constraints = RigidbodyConstraints.FreezeRotationZ;
+        objectRigid.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
 
         hitObject.AddComponent<TransformedObject>();
         //TransformedObject transformed = hitObject.GetComponent<TransformedObject>();
@@ -88,18 +91,26 @@ public class PlayerTransformation : MonoBehaviour
         hitObject.AddComponent<PlayerMove>();
         hitObject.AddComponent<CamController>();
 
+        subCamera.gameObject.SetActive(true);
+        subCamera.transform.SetParent(hitObject.transform);
+        subCamera.transform.localPosition = hitObject.transform.position + new Vector3(0, 4, -4);
+        //objectAwareness = subCamera;
     }
 
     public void returnPlayer()
     {
         if (playerInput.returnPlayer)
         {
-            playerObject.SetActive(true);
-            hitObject.SetActive(false);
+            //if (playerObject == null)
+            //    Debug.Log("기존 플레이어 비활성");
 
+            //playerObject.SetActive(true);
+            //subCamera.gameObject.SetActive(false);
+            Destroy(hitObject);
             state = State.Ready;
 
             Debug.Log("플레이어로 복귀");
+            return;
         }
     }
 }
