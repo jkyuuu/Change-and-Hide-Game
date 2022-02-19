@@ -35,6 +35,7 @@
        subCamera = subCamParent.GetChild(0);
    --> Null 오류가 생기기에 if(subCamera == Null) 이라면 "서브 카메라 없음"을 디버그함.
    --> 그 다음, 오브젝트 생성될 때 3인칭 카메라 활성화 시키고 SetParent를 이용해 subCamera 오브젝트가 instantiate된 오브젝트 자식으로 들어가게 함.
+   --> localPosition을 생성된 플레이어 오브젝트에서 일정 간격 떨어진 곳으로 이동한 위치로 들어감.
    
    
   (4) 기존 플레이어로 전환
