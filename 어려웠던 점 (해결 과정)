@@ -54,7 +54,11 @@
    
    - 문제점 : 전환 키를 눌렀을 경우 기존 플레이어 오브젝트는 활성화 되나 hitObject가 사라지지 않음. 키 한번 더 눌러야 hitObject가 사라짐.
    
-  
+   --> 원인 : 변신한 플레이어의 playerTransformation 스크립트의 hitObject에 오브젝트가 할당되어 있지 않아서 한번 눌렀을 때는 기존 플레이어 오브젝트만 활성화 되고 hitObject는 파괴되지 않음.
+              두번째 눌러야 기존 플레이어 스크립트에 hitObject가 할당되어 있기 때문에 그제서야 Destroy(hitObject)가 실행됨.
+   *** 해결 : 변신한 플레이어의 hitObject에 this.gameObject를 할당.
+   
+   - enum State의 state 할당 문제 발생.
    
   (5) instantiate 오브젝트에 기존 플레이어 스크립트 추가와 스크립트 변수 그대로 가져오기.
   
