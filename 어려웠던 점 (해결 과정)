@@ -62,7 +62,7 @@
    
    --> 원인 : 변신한 플레이어의 playerTransformation 스크립트의 hitObject에 오브젝트가 할당되어 있지 않아서 한번 눌렀을 때는 기존 플레이어 오브젝트만 활성화 되고 hitObject는 파괴되지 않음.
               두번째 눌러야 기존 플레이어 스크립트에 hitObject가 할당되어 있기 때문에 그제서야 Destroy(hitObject)가 실행됨.
-   *** 해결 : 변신한 플레이어의 hitObject에 this.gameObject를 할당.
+   *** 해결 : 플레이어의 상태가 Transformation이라면 hitObject에 this.gameObject를 할당.
    
    - enum State의 state 할당 문제 발생.
    --> 변신하거나 돌아올 때 state를 할당하는 것이 아닌 컴포넌트 활성화 시 state 할당. Start() 에서 만약 "Player" 태그라면 State.Ready가 되도록.
