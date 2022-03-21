@@ -26,8 +26,13 @@ public class CamRotate : MonoBehaviour
 
     private void Update()
     {
+        yMouseRotate();
+    }
+
+    private void yMouseRotate()
+    {
         float yMouseRotate = Input.GetAxis("Mouse Y") * yMouseSensitivity;
-        
+
         mouseY += yMouseRotate * Time.deltaTime;
         // P(Position) = P0(Position 0) + vt(velocity와 time) --> 변경위치 = 현재위치 + (속도*시간)
 
@@ -38,7 +43,5 @@ public class CamRotate : MonoBehaviour
             mainCam.transform.localRotation = Quaternion.Euler(-mouseY, 0f, 0f);
             //Debug.Log("X축 기준 Y축 이동 감지");
         }
-
-        
     }
 }

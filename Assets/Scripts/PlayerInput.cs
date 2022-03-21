@@ -7,7 +7,6 @@ public class PlayerInput : MonoBehaviour
     public string zInputName = "Vertical";
     public string xInputName = "Horizontal";
     public string selectButtonName = "Fire1";
-    
 
     // 값 할당은 내부에서만
     public float zInput { get; private set; }
@@ -18,8 +17,8 @@ public class PlayerInput : MonoBehaviour
 
     private void Update()
     {
-        zInput = Input.GetAxis(zInputName);
         xInput = Input.GetAxis(xInputName);
+        zInput = Input.GetAxis(zInputName);
         selectObject = Input.GetButton(selectButtonName);
         returnPlayer = Input.GetKeyDown("c");
     }

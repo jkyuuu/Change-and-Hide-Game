@@ -4,12 +4,11 @@ using UnityEngine;
 
 public class ObjectAwareness : MonoBehaviour
 {
-    private PlayerTransformation playerTransformation;
     public Transform rayTransform;
     private float rayDistance = 50f;
 
     public GameObject hitGameobject;
-    //public LayerMask objectTarget;
+
     public bool rayHit { get; private set; }
 
     protected void OnEnable()
@@ -19,7 +18,7 @@ public class ObjectAwareness : MonoBehaviour
 
     private void Start()
     {
-        playerTransformation = GetComponent<PlayerTransformation>();
+        hitGameobject = null;        
     }
 
     public void Awareness()
@@ -42,6 +41,7 @@ public class ObjectAwareness : MonoBehaviour
         else
         {
             rayHit = false;
+            hitGameobject = null;
 
             Debug.Log("¥Í¡ˆ æ ¿Ω");
             

@@ -6,7 +6,8 @@ public class PlayerMove : MonoBehaviour
 {
     private PlayerInput playerInput;
     private Rigidbody playerRigidbody;
-    private Animator playerAnimator;
+    private PlayerTransformation playerTransformation;
+    private CamRotate camRotate;
 
     public float moveSpeed = 5f;
     public float jumpPower = 5f;
@@ -18,7 +19,8 @@ public class PlayerMove : MonoBehaviour
     {
         playerInput = GetComponent<PlayerInput>();
         playerRigidbody = GetComponent<Rigidbody>();
-        playerAnimator = GetComponent<Animator>();
+        playerTransformation = GetComponent<PlayerTransformation>();
+        camRotate = GetComponent<CamRotate>();
     }
 
     private void FixedUpdate()
@@ -26,7 +28,6 @@ public class PlayerMove : MonoBehaviour
         Move();
         Jump();
     }
-
     private void Update()
     {
         XMouseRotate();
@@ -47,11 +48,6 @@ public class PlayerMove : MonoBehaviour
                 //Debug.Log("점프");
             }
         }
-        else
-        {
-            return;
-            //Debug.Log("점프 못함");
-        }
     }
     private void OnCollisionEnter(Collision collision)
     {
@@ -63,10 +59,13 @@ public class PlayerMove : MonoBehaviour
     }
     private void XMouseRotate()
     {
-        float xMouseRotate = Input.GetAxis("Mouse X") * xMouseSensitivity;
+        if(playerTransformation.playerObject.gameObject != null)
+        {
+            float xMouseRotate = Input.GetAxis("Mouse X") * xMouseSensitivity;
 
-        transform.Rotate(0f, xMouseRotate, 0f);
-        Debug.Log("Y축 기준 X축 이동 감지");
+            transform.Rotate(0f, xMouseRotate, 0f);
+            Debug.Log("Y축 기준 X축 이동 감지");
+        }
     }
 
 }
