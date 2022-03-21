@@ -7,13 +7,15 @@ public class PlayerTransformation : MonoBehaviour
     [SerializeField]
     private ObjectAwareness objectAwareness;
     private PlayerInput playerInput;
-    private GameObject playerObject;
+    private PlayerMove playerMove;
+
+    public Transform playerObject;
+    private Transform parentPlayer;
 
     public GameObject hitObject;
     private Transform transformPoint;
 
     private Rigidbody objectRigid;
-    private CamController camController;
 
     private Transform subCamParent;
     private Transform subCamera;
@@ -23,7 +25,7 @@ public class PlayerTransformation : MonoBehaviour
         Transformation
     }
 
-    public State state { get; private set; } // 현재 플레이어 상태
+    public State playerState { get; private set; } // 현재 플레이어 상태
     private void Awake()
     {
         subCamParent = GameObject.Find("Sub Cam Parent").transform;
@@ -31,86 +33,106 @@ public class PlayerTransformation : MonoBehaviour
         if (subCamera == null)
             Debug.Log("서브 카메라 없음");
     }
-    private void OnEnable()
-    {
-        state = State.Ready;
+    //private void OnEnable()
+    //{
         
-    }
-    
+    //}
+
     private void Start()
     {        
         playerInput = GetComponent<PlayerInput>();
-        camController = GetComponent<CamController>();
-        
+        playerMove = GetComponent<PlayerMove>();
+
+        parentPlayer = GameObject.Find("Player").transform;
+        playerObject = parentPlayer.GetChild(0);
+
+        if (GameObject.FindWithTag("Player"))
+        {
+            this.playerState = State.Ready;
+        }
+        else
+        {
+            this.playerState = State.Transformation;
+            hitObject = this.gameObject;
+        }
     }
 
     private void Update()
-    {
-        if(objectAwareness != null)
+    {        
+        Transformation();
+        Debug.Log("변신 완료!");
+
+        if (playerInput.returnPlayer)
         {
-            objectAwareness.Awareness();
-
-            Transformation();
-            
+            if(this.playerState == State.Transformation)
+            {
+                returnPlayer();
+                Debug.Log("플레이어로 복귀");
+            }
+            else
+            {
+                Debug.Log("변신 중 아님");
+            }
         }
-
-        returnPlayer();
     }
 
     public void Transformation()
     {
-        if (objectAwareness.rayHit)
+        if (objectAwareness != null)
         {
-            if(playerInput.selectObject)
+            objectAwareness.Awareness();
+
+            if (objectAwareness.rayHit)
             {
-                playerObject = this.gameObject;
+                if (playerInput.selectObject)
+                {
+                    Debug.Log("마우스 누름");
 
-                CreateObject();
-                Debug.Log("오브젝트 가져옴");
-
-                playerObject.SetActive(false);
-                state = State.Transformation;
-                Debug.Log("변신 완료!");
+                    if (this.playerState == State.Ready)
+                    {
+                        CreateObject();
+                        Debug.Log("오브젝트 가져옴");
+                    }
+                    else
+                    {
+                        Debug.Log("레디 아님");
+                    }
+                }
+                else
+                {
+                    Debug.Log("마우스 안누름");
+                    return;
+                }
             }
         }
     }
 
     public void CreateObject()
     {
-        transformPoint = playerObject.transform;
+        transformPoint = playerObject;
         hitObject = Instantiate(objectAwareness.hitGameobject, transformPoint.position, transformPoint.rotation);
         
         objectRigid = hitObject.GetComponent<Rigidbody>();
         objectRigid.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
-
-        hitObject.AddComponent<TransformedObject>();
-        //TransformedObject transformed = hitObject.GetComponent<TransformedObject>();
-        //transformed.enabled = true;
         hitObject.AddComponent<PlayerInput>();
         hitObject.AddComponent<PlayerTransformation>();
         hitObject.AddComponent<PlayerMove>();
-        hitObject.AddComponent<CamController>();
+
+        playerObject.gameObject.SetActive(false);
 
         subCamera.gameObject.SetActive(true);
         subCamera.transform.SetParent(hitObject.transform);
-        subCamera.transform.localPosition = hitObject.transform.position + new Vector3(0, 4, -4);
-        //objectAwareness = subCamera;
+        subCamera.transform.position = hitObject.transform.position + new Vector3(0, 4, -4);
     }
 
     public void returnPlayer()
     {
-        if (playerInput.returnPlayer)
-        {
-            //if (playerObject == null)
-            //    Debug.Log("기존 플레이어 비활성");
+        subCamera.transform.SetParent(subCamParent);
+        subCamera.gameObject.SetActive(false);
+        Destroy(hitObject);
 
-            //playerObject.SetActive(true);
-            //subCamera.gameObject.SetActive(false);
-            Destroy(hitObject);
-            state = State.Ready;
+        playerObject.gameObject.SetActive(true);
+        playerObject.position = hitObject.transform.localPosition;
 
-            Debug.Log("플레이어로 복귀");
-            return;
-        }
     }
 }
