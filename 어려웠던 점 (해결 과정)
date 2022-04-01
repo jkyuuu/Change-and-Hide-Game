@@ -48,6 +48,10 @@
    -> 카메라 위치는 3인칭 플레이어에서 z축을 바라보는 카메라까지 거리로 한다.
    -> 플레이어의 이동 방향은 카메라가 바라보는 방향을 기준으로 플레이어의 z축, x축 이동이 가능하게 함.
    
+        Vector3 zDistance = new Vector3(0f, 0f, distanceZ);
+        Vector3 yDistance = new Vector3(0f, distanceY, 0f);
+        transform.position = thirdPlayer.transform.position - (transform.rotation * zDistance + yDistance);
+   
    - 기존 플레이어 오브젝트로 활성화 때 1인칭 메인캠의 바라보는 방향이 3인칭 서브캠의 바라보던 방향으로 메인캠(플레이어 오브젝트)이 활성화 되어야 함.
     -> 문제점 : 1인칭 메인캠의 주시 방향이 3인칭으로 바라보던 방향과 상관없이 비활성 되기 전 방향으로 활성화됨. 활성화하면서 3인칭 캠의 방향으로 활성화 되도록 해야함.
     
