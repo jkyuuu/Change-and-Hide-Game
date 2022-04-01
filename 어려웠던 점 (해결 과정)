@@ -51,7 +51,15 @@
    - 기존 플레이어 오브젝트로 활성화 때 1인칭 메인캠의 바라보는 방향이 3인칭 서브캠의 바라보던 방향으로 메인캠(플레이어 오브젝트)이 활성화 되어야 함.
     -> 문제점 : 1인칭 메인캠의 주시 방향이 3인칭으로 바라보던 방향과 상관없이 비활성 되기 전 방향으로 활성화됨. 활성화하면서 3인칭 캠의 방향으로 활성화 되도록 해야함.
     
-    *** 해결 : 
+    *** 해결 : LookAt 함수를 이용해 해결.
+    
+        var direction = subCamera.transform.forward;
+        direction.y = 0;
+        playerObject.transform.LookAt(playerObject.transform.position + direction);
+        
+        --> returnPlayer 함수를 실행했을 때 서브카메라 비활성화되고 1인칭 플레이어와 메인카메라 활성화됨.
+        --> 그 후 서브카메라 앞방향을 direction으로 지정해놓고 플레이어는 y 축이 0이어야 하므로 direction.y 를 0으로 설정.
+        --> returnPlayer 했을 때 플레이어가 바라보는 방향을 플레이어 위치에서 카메라가 바라보는 앞방향으로 설정.
    
   (4) 기존 플레이어로 전환
    
