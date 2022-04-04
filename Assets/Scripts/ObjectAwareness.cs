@@ -31,8 +31,8 @@ public class ObjectAwareness : MonoBehaviour
 
         if (Physics.Raycast(rayTransform.transform.position, rayTransform.transform.forward, out hit, rayDistance, objectTarget))
         {   
-            rayHit = true;
             hitGameobject = hit.transform.gameObject;
+            rayHit = true;
 
             Debug.DrawRay(rayTransform.transform.position, rayTransform.transform.forward * rayDistance, Color.blue, 0.3f);
             Debug.Log("ObjectTarget ¥Í¿Ω");
@@ -40,8 +40,8 @@ public class ObjectAwareness : MonoBehaviour
         }            
         else
         {
-            rayHit = false;
             hitGameobject = null;
+            rayHit = false;
 
             Debug.Log("¥Í¡ˆ æ ¿Ω");
             
