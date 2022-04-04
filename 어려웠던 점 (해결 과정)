@@ -40,7 +40,7 @@
    --> 또한 플레이어 마우스 컨트롤도 CompareTag("Player")가 아니면 컨트롤 되지 않게 함. -> 3인칭 카메라는 캐릭터 기준으로 회전해야 하기 떄문에 기존 1인칭 플레이어만 적용.
    
    <문제>
-   - 3인칭 카메라 전환은 가능하지만 카메라가 플레이어 기준이 아닌 카메라 기준으로 회전하여 회전 시 캐릭터가 앵글을 벗어남.
+   A) 3인칭 카메라 전환은 가능하지만 카메라가 플레이어 기준이 아닌 카메라 기준으로 회전하여 회전 시 캐릭터가 앵글을 벗어남.
    - 플레이어 기준으로 3인칭 서브카메라가 회전 할 수 있게 수정해야 함.
    
    <<수정>>
@@ -52,19 +52,24 @@
         Vector3 yDistance = new Vector3(0f, distanceY, 0f);
         transform.position = thirdPlayer.transform.position - (transform.rotation * zDistance + yDistance);
    
-   - 기존 플레이어 오브젝트로 활성화 때 1인칭 메인캠의 바라보는 방향이 3인칭 서브캠의 바라보던 방향으로 메인캠(플레이어 오브젝트)이 활성화 되어야 함.
-    -> 문제점 : 1인칭 메인캠의 주시 방향이 3인칭으로 바라보던 방향과 상관없이 비활성 되기 전 방향으로 활성화됨. 활성화하면서 3인칭 캠의 방향으로 활성화 되도록 해야함.
+   B) 위 문제에 이어 3인칭 카메라가 플레이어 기준으로 회전이 가능하다면 이제 카메라가 바라보는 방향대로 플레이어 z방향이 움직여야 한다.
+   - 즉, 카메라가 바라보는 방향으로 플레이어가 따라서 회전해야 한다.
+    --> transform.LookAt() 이나 rigidbody.MoveRotation() 으로 카메라가 바라보는 방향으로 플레이어 회전을 주었다.
+    --> 하지만 이 경우 기존 position에서 rotation 회전 각 까지의 속도가 빨라 회전 시 플레이어가 부드럽게 회전하지 못하는 문제가 발생했다.
     
-    *** 해결 : LookAt 함수를 이용해 해결.
+   *** 해결 : LookAt()과 MoveRotation() 대신 rigidbody.rotation을 Quaternion.Lerp(float a, float b, float t) 로 설정했다.
+    --> Lerp() : 회전각 a에서 회전각 b까지 t의 속도로 회전한다.
     
-        var direction = subCamera.transform.forward;
-        direction.y = 0;
-        playerObject.transform.LookAt(playerObject.transform.position + direction);
+        Vector3 playerToSubcam = playerTransformation.subCamera.transform.forward;
+        playerToSubcam.y = 0f;
+        Quaternion newRotation = Quaternion.LookRotation(playerToSubcam);
+        playerRigidbody.rotation = Quaternion.Lerp(playerRigidbody.rotation, newRotation, Time.deltaTime * rotateSpeed);
         
-        --> returnPlayer 함수를 실행했을 때 서브카메라 비활성화되고 1인칭 플레이어와 메인카메라 활성화됨.
-        --> 그 후 서브카메라 앞방향을 direction으로 지정해놓고 플레이어는 y 축이 0이어야 하므로 direction.y 를 0으로 설정.
-        --> returnPlayer 했을 때 플레이어가 바라보는 방향을 플레이어 위치에서 카메라가 바라보는 앞방향으로 설정.
-        --> LookAt() 은 현재 위치 기준이 아닌 절대적인 위치 기준이기 때문에 플레이어 현재 위치에 앞방향을 더해주어야 함.
+    - 서브 캠의 앞 방향을 설정하고, 그 앞 방향이 수평선을 바라보도록 y축을 0으로 설정해 바라보는 시점이 위아래로 흔들리지 않게 한다.
+    - 앞을 바라보는 방향으로 회전을 newRotation으로 설정.
+    - 오브젝트 rigidbody 회전을 Lerp를 이용해 현재 회전각에서 newRotation으로 회전하게 하되, 지정 속도로 회전하도록 설정한다.
+   
+   
    
   (4) 기존 플레이어로 전환
    
@@ -98,6 +103,22 @@
    
    --> 원인 :
    *** 해결 : 
+   
+   < 문제 >
+   - 기존 플레이어 오브젝트로 활성화 때 1인칭 메인캠의 바라보는 방향이 3인칭 서브캠의 바라보던 방향으로 메인캠(플레이어 오브젝트)이 활성화 되어야 함.
+    -> 문제점 : 1인칭 메인캠의 주시 방향이 3인칭으로 바라보던 방향과 상관없이 비활성 되기 전 방향으로 활성화됨. 활성화하면서 3인칭 캠의 방향으로 활성화 되도록 해야함.
+    
+    *** 해결 : LookAt 함수를 이용해 해결.
+    
+        var direction = subCamera.transform.forward;
+        direction.y = 0;
+        playerObject.transform.LookAt(playerObject.transform.position + direction);
+        
+        --> returnPlayer 함수를 실행했을 때 서브카메라 비활성화되고 1인칭 플레이어와 메인카메라 활성화됨.
+        --> 그 후 서브카메라 앞방향을 direction으로 지정해놓고 플레이어는 y 축이 0이어야 하므로 direction.y 를 0으로 설정.
+        --> returnPlayer 했을 때 플레이어가 바라보는 방향을 플레이어 위치에서 카메라가 바라보는 앞방향으로 설정.
+        --> LookAt() 은 현재 위치 기준이 아닌 절대적인 위치 기준이기 때문에 플레이어 현재 위치에 앞방향을 더해주어야 함.
+        
    
   (5) instantiate 오브젝트에 기존 플레이어 스크립트 추가와 스크립트 변수 그대로 가져오기.
   
