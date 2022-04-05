@@ -31,7 +31,15 @@ public class PlayerMove : MonoBehaviour
 
         if (playerTransformation.hitObject)
         {
-            thirdMove();
+            if(Input.GetKey(KeyCode.LeftShift))
+            {
+                CancelInvoke("thirdMove");
+                Debug.Log("thirMove 함수 중단");
+            }
+            else
+            {
+                thirdMove();
+            }
         }
     }
     private void Update()
@@ -80,7 +88,6 @@ public class PlayerMove : MonoBehaviour
         playerToSubcam.y = 0f;
         Quaternion newRotation = Quaternion.LookRotation(playerToSubcam);
         playerRigidbody.rotation = Quaternion.Lerp(playerRigidbody.rotation, newRotation, Time.deltaTime * rotateSpeed);
-        
         //playerRigidbody.MoveRotation(newRotation);
 
         ////(방법2)
