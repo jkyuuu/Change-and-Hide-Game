@@ -26,7 +26,7 @@
    --> hitObject.Constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
   
   
-  (3) 카메라 전환
+  (3) 카메라 전환 및 
   
    - 미리 만들어둔 비활성화 된 3인칭 카메라를 instantiate한 오브젝트 자식으로 가져와서 플레이어 마우스 상하 이동 구현을 해야함.
    - Find 는 성능에 문제가 생길 수 있기에 함수 구현 내에 쓰지 않고 Awake() 라이프사이클에 넣어 오브젝트 활성화 상관없이 스크립트 호출되자마자 3인칭 카메라를 찾을 수 있게 함.
@@ -69,7 +69,18 @@
     - 앞을 바라보는 방향으로 회전을 newRotation으로 설정.
     - 오브젝트 rigidbody 회전을 Lerp를 이용해 현재 회전각에서 newRotation으로 회전하게 하되, 지정 속도로 회전하도록 설정한다.
    
+   C) 3인칭 카메라일 때 플레이어가 회전하지 않고 주변을 관찰 할 수 있도록 설정하기.
+    --> Input.GetKey(KeyCode.LeftShift) 일 경우 CancleInvoke()를 이용해 위 B)의 실행 함수 thirdMove를 실행 중단한다. 누르지 않을 경우는 함수 실행.
    
+            if(Input.GetKey(KeyCode.LeftShift))
+            {
+                CancelInvoke("thirdMove");
+                Debug.Log("thirMove 함수 중단");
+            }
+            else
+            {
+                thirdMove();
+            }
    
   (4) 기존 플레이어로 전환
    
