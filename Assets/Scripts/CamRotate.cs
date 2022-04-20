@@ -8,13 +8,15 @@ public class CamRotate : MonoBehaviour
     // 직렬화 : 추상 데이터를 전송, 저장 가능한 형태로 바꾸는 것.
     // public 데이터만 직렬화하는데 SerializeField를 선언함으로써 private도 직렬화 되는 것이다.
 
-    
-    public float yMouseSensitivity = 50f;
+    [SerializeField]
+    private float xMouseSensitivity = 5f;
+    [SerializeField]
+    private float yMouseSensitivity = 50f;
 
     public Camera mainCam;
     public float mouseY;
 
-    private void Start()
+    public void Start()
     {
         mainCam = FindObjectOfType<Camera>();
         if (mainCam == null)
@@ -26,10 +28,24 @@ public class CamRotate : MonoBehaviour
 
     private void Update()
     {
-        yMouseRotate();
+        if (this.gameObject.CompareTag("Player"))
+        {
+            XMouseRotate();
+        }
+
+        YMouseRotate();
     }
 
-    public void yMouseRotate()
+    private void XMouseRotate()
+    {
+        float xMouseRotate = Input.GetAxis("Mouse X") * xMouseSensitivity;
+
+        transform.Rotate(0f, xMouseRotate, 0f);
+        Debug.Log("Y축 기준 X축 이동 감지");
+    }
+
+
+    public void YMouseRotate()
     {
         float yMouseRotate = Input.GetAxis("Mouse Y") * yMouseSensitivity;
 
