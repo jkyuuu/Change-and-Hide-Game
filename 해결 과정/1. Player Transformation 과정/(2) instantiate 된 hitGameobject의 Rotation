@@ -1,0 +1,10 @@
+(2) instantiate 된 hitGameobject의 Rotation
+  
+   - instantiate 된 오브젝트의 Rotation을 고정시키기 위해 RigidbodyConstraints.FreezeRotation 을 이용하여 X축과 Z축을 고정시키려함.   
+   - hitObject.Constraints = RigidbodyConstraints.FreezeRotationX;
+     hitObject.Constraints = RigidbodyConstraints.FreezeRotationZ;
+     
+   - 위 처럼 했으나 Z축만 고정이 됨.
+   
+   --> " | " 를 이용해 해결 가능함을 알게됨.
+   --> hitObject.Constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
