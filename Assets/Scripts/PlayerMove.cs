@@ -7,13 +7,12 @@ public class PlayerMove : MonoBehaviour
     private PlayerInput playerInput;
     private Rigidbody playerRigidbody;
     private PlayerTransformation playerTransformation;
-    private ThirdPersonCam thirdPersonCam;
+    private CamView camView;
 
     public float moveSpeed = 5f;
     public float jumpPower = 5f;
     private bool isJumping;
 
-    private float xMouseSensitivity = 5f;
     private float rotateSpeed = 15f;
 
     private void Start()
@@ -21,7 +20,7 @@ public class PlayerMove : MonoBehaviour
         playerInput = GetComponent<PlayerInput>();
         playerRigidbody = GetComponent<Rigidbody>();
         playerTransformation = GetComponent<PlayerTransformation>();
-        thirdPersonCam = GetComponent<ThirdPersonCam>();
+        camView = GetComponent<CamView>();
     }
 
     private void FixedUpdate()
@@ -38,15 +37,8 @@ public class PlayerMove : MonoBehaviour
             }
             else
             {
-                thirdMove();
+                ThirdMove();
             }
-        }
-    }
-    private void Update()
-    {
-        if (this.gameObject.CompareTag("Player"))
-        {
-            XMouseRotate();
         }
     }
 
@@ -68,25 +60,19 @@ public class PlayerMove : MonoBehaviour
     }
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.CompareTag("Ground"))
+        if (collision.gameObject)
         {
             isJumping = false;
             //Debug.Log("바닥에 닿음"); 
         }
     }
-    private void XMouseRotate()
-    {        
-        float xMouseRotate = Input.GetAxis("Mouse X") * xMouseSensitivity;
-        
-        transform.Rotate(0f, xMouseRotate, 0f);
-        Debug.Log("Y축 기준 X축 이동 감지");        
-    }
-    private void thirdMove()
+   
+    private void ThirdMove()
     {
         //(방법1)
-        Vector3 playerToSubcam = playerTransformation.subCamera.transform.forward;
-        playerToSubcam.y = 0f;
-        Quaternion newRotation = Quaternion.LookRotation(playerToSubcam);
+        Vector3 playerToCam = playerTransformation.mainCamera.forward;
+        playerToCam.y = 0f;
+        Quaternion newRotation = Quaternion.LookRotation(playerToCam);
         playerRigidbody.rotation = Quaternion.Lerp(playerRigidbody.rotation, newRotation, Time.deltaTime * rotateSpeed);
         //playerRigidbody.MoveRotation(newRotation);
 
