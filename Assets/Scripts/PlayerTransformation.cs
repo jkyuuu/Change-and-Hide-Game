@@ -87,10 +87,12 @@ public class PlayerTransformation : MonoBehaviour
                     Transformation();
                     Debug.Log("변신 완료!");
 
-                    thirdPersonCam.enabled = true;
-                    thirdPersonCam.thirdCamPlayer = hitObject;
                     camView.toggleView = 4 - camView.toggleView;
                     Debug.Log("3인칭 토글뷰");
+
+                    var thirdDirection = mainCamera.forward;
+                    thirdDirection.y = 0;
+                    hitObject.transform.LookAt(hitObject.transform.position + thirdDirection);
                 }
                 else
                     Debug.Log("대상 없음");
@@ -148,14 +150,12 @@ public class PlayerTransformation : MonoBehaviour
         hitObject.AddComponent<PlayerInput>();
         hitObject.AddComponent<PlayerTransformation>();
         hitObject.AddComponent<PlayerMove>();
+        thirdPersonCam.thirdCamPlayer = hitObject;
         thirdPersonCam.enabled = true;
 
         hitObject.tag = "Transformed";
         mainCamera.SetParent(mainCamParent);
         //playerObject.gameObject.SetActive(false);
-        var thirdDirection = mainCamera.forward;
-        thirdDirection.y = 0;
-        hitObject.transform.LookAt(transformPoint.position + thirdDirection);
 
         PlayerPool.ReturnPool(player);
         //subCamera.gameObject.SetActive(true);
