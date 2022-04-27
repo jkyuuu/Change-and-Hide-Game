@@ -59,7 +59,7 @@ public class Enemy : LivingEntity
                         entityTarget = targetLivingEntity;
 
                         break;
-                    } 
+                    }
                 }
             }
             yield return new WaitForSeconds(0.2f);
