@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class LivingEntity : MonoBehaviour, IDamageable
 {
-    public float startingHealth = 100f;
+    public float startingHealth = 100f; 
     public float health { get; protected set; }
     public bool dead { get; protected set; }
 
