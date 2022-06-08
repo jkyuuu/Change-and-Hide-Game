@@ -25,7 +25,7 @@ public class PlayerTransformation : MonoBehaviour
     public Transform mainCamParent;
     public Transform mainCamera;
 
-    public event Action create;
+    //public event Action create;
 
     public enum State
     {
