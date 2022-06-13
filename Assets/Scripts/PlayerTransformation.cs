@@ -11,6 +11,7 @@ public class PlayerTransformation : MonoBehaviour
     public CamView camView;
     public ThirdPersonCam thirdPersonCam;
     public Player player;
+    //private Enemy enemy;
 
     public GameObject playerObject;
     public GameObject thirdPlayerObject;
@@ -55,6 +56,7 @@ public class PlayerTransformation : MonoBehaviour
         camView = GameObject.Find("Main Camera").GetComponent<CamView>();
         thirdPersonCam = mainCamera.GetComponent<ThirdPersonCam>();
         player = FindObjectOfType<Player>();
+        //enemy = GameObject.Find("Enemy").GetComponent<Enemy>();
 
         playerObject = GameObject.FindWithTag("Player");
         thirdPlayerObject = GameObject.FindWithTag("Transformed");
@@ -158,6 +160,7 @@ public class PlayerTransformation : MonoBehaviour
         //playerObject.gameObject.SetActive(false);
 
         PlayerPool.ReturnPool(player);
+        
         //subCamera.gameObject.SetActive(true);
 
 
