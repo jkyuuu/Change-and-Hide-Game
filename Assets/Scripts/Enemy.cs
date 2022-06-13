@@ -6,12 +6,14 @@ using UnityEngine.AI;
 public class Enemy : LivingEntity
 {
     public LayerMask whatIsTarget;
+    //private PlayerTransformation playerTransformation;
 
-    private LivingEntity entityTarget;
+    public LivingEntity entityTarget;
     private NavMeshAgent pathFinder;
     public GameObject player;
     public NavMeshAgent nav;
     public Transform targetPos;
+    public GameObject transPlayer;
 
     float setRange = 5f;
     Vector3 setPoint;
@@ -36,47 +38,87 @@ public class Enemy : LivingEntity
     }
     private void Start()
     {
+        //playerTransformation = GameObject.Find("Player").GetComponent<PlayerTransformation>();
         targetPos = GameObject.Find("Target Pos").transform;
         player = GameObject.FindWithTag("Player");
+        //transPlayer = GameObject.FindWithTag
 
         //StartCoroutine(RandMove());
     }
 
     private void Update()
     {
-        RandMove();
+        if (player != null)
+        {
+            float distance = Vector3.Distance(transform.position, player.transform.position);
+            if (distance <= 5f )// entityTarget != null)
+            {
+                StartCoroutine(UpdatePath());
+                Debug.Log("플레이어 추적");
+            }
+            else if (distance > 5f)
+            {
+                StopCoroutine(UpdatePath());
+                RandMove();
+            }
+            //else if (entityTarget == null)
+            //{
+            //    StopCoroutine(UpdatePath());
+            //    RandMove();
+            //}
+        }
     }
 
     public void RandMove()
     {
         if (!dead)
-        {
-            if (player != null)
+        {  
+            if (RandomPoint(targetPos.position, setRange, out setPoint))
             {
-                float distance = Vector3.Distance(transform.position, player.transform.position);
-
-                if (distance > 5f)
-                {
-                    if (RandomPoint(targetPos.position, setRange, out setPoint))
-                    {
-                        Debug.DrawRay(setPoint, Vector3.up, Color.red, 1.0f);
-                        targetPos.position = setPoint;
-                    }
-                    if (nav != null)
-                    {
-                        nav.SetDestination(targetPos.position);
-                        Debug.Log("랜덤 목적지로 이동");
-                    }
-                }
-                else
-                {
-                    StartCoroutine(UpdatePath());
-                    Debug.Log("플레이어 추적");
-                }
+                Debug.DrawRay(setPoint, Vector3.up, Color.red, 1.0f);
+                targetPos.position = setPoint;
             }
+            if (nav != null)
+            {
+                nav.SetDestination(targetPos.position);
+                Debug.Log("랜덤 목적지로 이동");
+            } 
         }
         //yield return new WaitForSeconds(0.2f);
     }
+
+    //public void RandMove()
+    //{
+    //    if (!dead)
+    //    {
+    //        if (player != null)
+    //        {
+    //            float distance = Vector3.Distance(transform.position, player.transform.position);
+
+    //            if(distance <= 5f && entityTarget != null)
+    //            {
+    //                StartCoroutine(UpdatePath());
+    //                Debug.Log("플레이어 추적");
+    //            }
+    //            else if (distance > 5f || entityTarget == null)
+    //            {
+    //                StopCoroutine(UpdatePath());
+                    
+    //                if (RandomPoint(targetPos.position, setRange, out setPoint))
+    //                {
+    //                    Debug.DrawRay(setPoint, Vector3.up, Color.red, 1.0f);
+    //                    targetPos.position = setPoint;
+    //                }
+    //                if (nav != null)
+    //                {
+    //                    nav.SetDestination(targetPos.position);
+    //                    Debug.Log("랜덤 목적지로 이동");
+    //                }
+    //            }
+    //        }
+    //    }
+    //    //yield return new WaitForSeconds(0.2f);
+    //}
 
     bool RandomPoint(Vector3 center, float range, out Vector3 result)
     {
@@ -96,6 +138,7 @@ public class Enemy : LivingEntity
 
     private IEnumerator UpdatePath()
     {
+        var waitForSec = new WaitForSeconds(0.2f);
         while(!dead)
         {
             if (hasTarget)
@@ -121,7 +164,11 @@ public class Enemy : LivingEntity
                     }
                 }
             }
-            yield return new WaitForSeconds(0.2f);
+            //else if(!hasTarget && entityTarget == null)
+            //{
+            //    RandMove();
+            //}
+            yield return waitForSec;
         }
     }
 }
