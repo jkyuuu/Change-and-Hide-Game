@@ -68,9 +68,9 @@ public class PlayerPool : MonoBehaviour
     public static void ReturnPool(Player playerObj)
     {
         playerObj.gameObject.SetActive(false);
+        playerObj.gameObject.transform.position = _playerPool.transform.position;
         playerObj.transform.SetParent(_playerPool.transform);
         _playerPool.poolingObjectQueue.Enqueue(playerObj);
-
         Debug.Log("풀로 돌아감");
     }
 
